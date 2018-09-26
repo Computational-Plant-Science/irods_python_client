@@ -75,10 +75,18 @@ def main():
     parser.add_argument('--zone', type=str, default='tempZone', help="irods zone")
     args, unknownargs = parser.parse_known_args()
 
+    if(args.cmd == "help"):
+        parser.print_help()
+        exit()
+
     if(args.user is not None):
         session = iRODSSession(host=args.host, port=args.port, user=args.user, password=args.passwd, zone=args.zone)
     else:
-        session = helpers.make_session()
+        try:
+            session = helpers.make_session()
+        except FileNotFoundError:
+            print("ERROR: No irods_envirment.json file found. Type 'pyicmd help' for details")
+            exit()
 
     if(args.cmd == "ls"):
         ls(session,unknownargs)
@@ -86,8 +94,8 @@ def main():
         put(session,unknownargs)
     elif(args.cmd == "rm"):
         rm(session,unknownargs)
-    elif(args.cmd == "help"):
-        parser.print_help()
+
+    session.cleanup()
 
 if __name__ == "__main__":
     main()
