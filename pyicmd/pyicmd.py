@@ -9,7 +9,7 @@ from irods.test import helpers
 description = '''
 Python port of the irods icommands.
 
-Supports irods_envirment.json file created by iinit. File can be at its
+Supports irods_environment.json file created by iinit. File can be at its
 default location ('~/.irods/irods_environment.json') or set via the
 IRODS_ENVIRONMENT_FILE variable.
 
@@ -33,7 +33,7 @@ def put(session,args):
         prog='pyicmd put',
         description='Copy file(s) from the local computer to [dir] on the server')
     parser.add_argument('loc', type=str, help='Location to put files')
-    parser.add_argument('files', type=str, nargs='*', help='Path or pattern of files to upload')
+    parser.add_argument('files', type=str, nargs='+', help='Path or pattern of files to upload')
     args = parser.parse_args(args)
 
     for file in args.files:
@@ -45,7 +45,7 @@ def rm(session,args):
     parser = argparse.ArgumentParser(
         prog='pyicmd rm',
         description='Remove the files listed from the irods server')
-    parser.add_argument('files', type=str, nargs='*', help='FULL Path or pattern of files to upload')
+    parser.add_argument('files', type=str, nargs='+', help='FULL Path or pattern of files to upload')
     args = parser.parse_args(args)
 
     for file in args.files:
