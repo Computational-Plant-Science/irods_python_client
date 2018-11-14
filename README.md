@@ -32,7 +32,7 @@ positional arguments:
   cmd               The icommand to run:
                        rm [file(s)]          Remove the files listed from the irods server
                        ls [path]             List the files and folders at the given path
-                       put [dir] [file(s)]   Copy file(s) from the local computer to [dir] on the server
+                       put [dir] [file(s)]   Copy file(s) and folder(s) from the local computer to [dir] on the server
 
                        To learn more about a function, type pyicmd [cmd] -h
 

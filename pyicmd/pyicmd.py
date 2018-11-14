@@ -6,6 +6,8 @@ import posixpath
 from irods.session import iRODSSession
 from irods.test import helpers
 
+import pyicmd.functional as F
+
 description = '''
 Python port of the irods icommands.
 
@@ -24,22 +26,18 @@ def ls(session,args):
     parser.add_argument('path', type=str, help='Path on irods server to list')
     args = parser.parse_args(args)
 
-    coll = session.collections.get(posixpath.join('/',args.path))
-    print([obj.name for obj in coll.data_objects])
-    print([obj.name for obj in coll.subcollections])
+    F.ls(session,args.path)
 
 def put(session,args):
     parser = argparse.ArgumentParser(
         prog='pyicmd put',
-        description='Copy file(s) from the local computer to [dir] on the server')
+        description='Copy file(s) and folder(s) from the local computer to [dir] on the server')
     parser.add_argument('loc', type=str, help='Location to put files')
     parser.add_argument('files', type=str, nargs='+', help='Path or pattern of files to upload')
+    parser.add_argument('-R', action='store_true', help="Put directories and thier contents recursively")
     args = parser.parse_args(args)
 
-    for file in args.files:
-        obj = session.data_objects.create(posixpath.join(args.loc,file))
-        with obj.open('r+') as dest, open(file,'rb') as f:
-            dest.write(f.read())
+    F.put(session,args.files,args.loc, recursive = args.R)
 
 def rm(session,args):
     parser = argparse.ArgumentParser(
@@ -48,15 +46,14 @@ def rm(session,args):
     parser.add_argument('files', type=str, nargs='+', help='FULL Path or pattern of files to upload')
     args = parser.parse_args(args)
 
-    for file in args.files:
-        obj = session.data_objects.get(file)
-        obj.unlink(force=True)
+    F.rm(session,args.files)
+
 
 def main():
     help_str = """ The icommand to run:
     rm [file(s)]          Remove the files listed from the irods server
     ls [path]             List the files and folders at the given path
-    put [dir] [file(s)]   Copy file(s) from the local computer to [dir] on the server
+    put [dir] [file(s)]   Copy file(s) and folder(s) from the local computer to [dir] on the server
 
     To learn more about a function, type pyicmd [cmd] -h
     """
