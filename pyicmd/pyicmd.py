@@ -28,10 +28,21 @@ def ls(session,args):
 
     F.ls(session,args.path)
 
+def get(session,args):
+    parser = argparse.ArgumentParser(
+        prog='pyicmd get',
+        description='Copy file(s) and folder(s) from the server to [loc] on the local computer')
+    parser.add_argument('files', type=str, nargs='+', help='Path or pattern of files to download')
+    parser.add_argument('loc', type=str, help='Location to put files')
+    parser.add_argument('-R', action='store_true', help="Put directories and thier contents recursively")
+    args = parser.parse_args(args)
+
+    F.get(session,args.files,args.loc, recursive = args.R)
+
 def put(session,args):
     parser = argparse.ArgumentParser(
         prog='pyicmd put',
-        description='Copy file(s) and folder(s) from the local computer to [dir] on the server')
+        description='Copy file(s) and folder(s) from the local computer to [loc] on the server')
     parser.add_argument('loc', type=str, help='Location to put files')
     parser.add_argument('files', type=str, nargs='+', help='Path or pattern of files to upload')
     parser.add_argument('-R', action='store_true', help="Put directories and thier contents recursively")
@@ -53,8 +64,8 @@ def main():
     help_str = """ The icommand to run:
     rm [file(s)]          Remove the files listed from the irods server
     ls [path]             List the files and folders at the given path
-    put [dir] [file(s)]   Copy file(s) and folder(s) from the local computer to [dir] on the server
-
+    put [loc] [file(s)]   Copy file(s) and folder(s) from the local computer to [loc] on the server
+    get [files(s)] [loc]  Copy file(s) and folder(s) from the server to [loc] on the local computer
     To learn more about a function, type pyicmd [cmd] -h
     """
     parser = argparse.ArgumentParser(
@@ -91,6 +102,8 @@ def main():
         put(session,unknownargs)
     elif(args.cmd == "rm"):
         rm(session,unknownargs)
+    elif(args.cmd == "get"):
+        get(session,unknownargs)
 
     session.cleanup()
 

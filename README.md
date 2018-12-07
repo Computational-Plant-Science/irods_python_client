@@ -13,6 +13,7 @@ pyicmd supports either iinit configuration or command line options. To use an ii
 ~/.irods/.irodsA
 ```
 to the ~/.irods on the computer without iinit.
+
 ## Usage
 ```bash
 usage: pyicmd [--host HOST] [--port PORT] [--user USER] [--passwd PASSWD]
@@ -32,8 +33,8 @@ positional arguments:
   cmd               The icommand to run:
                        rm [file(s)]          Remove the files listed from the irods server
                        ls [path]             List the files and folders at the given path
-                       put [dir] [file(s)]   Copy file(s) and folder(s) from the local computer to [dir] on the server
-
+                       put [loc] [file(s)]   Copy file(s) and folder(s) from the local computer to [loc] on the server
+                       get [files(s)] [loc]  Copy file(s) and folder(s) from the server to [loc] on the local computer
                        To learn more about a function, type pyicmd [cmd] -h
 
 
@@ -43,4 +44,9 @@ optional arguments:
   --user USER      irods username
   --passwd PASSWD  irods user password
   --zone ZONE      irods zone
+
 ```
+
+## Speed Test
+By default, icommands uses multi-threading for uploads greater than ~35MB. pyicmd does not currently support multiple threaded uploads, causing it to be slower for large files.
+![Speed Test](assets/UploadTimes.png)
