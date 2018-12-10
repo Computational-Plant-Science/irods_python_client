@@ -14,9 +14,17 @@ from argparse import RawTextHelpFormatter
 
 from irods.session import iRODSSession
 from irods.test import helpers
-from irods.exception import CollectionDoesNotExist
-
+from irods.exception import (CollectionDoesNotExist,
+                             CAT_INVALID_USER,
+                             CAT_INVALID_AUTHENTICATION,
+                             CAT_INVALID_CLIENT_USER,
+                             NetworkException)
 import pyicmd.functional as F
+
+def test(session):
+    '''Test the connection to the server'''
+    print("Connection Sucessful. iRODS server version: %s"%
+          (session.server_version,))
 
 def ls(session, args):# pylint: disable=invalid-name
     ''' List Files in collection '''
@@ -85,8 +93,39 @@ def rm(session, args):# pylint: disable=invalid-name
         except FileNotFoundError as exception:
             sys.exit(str(exception))
 
+def connect(args):
+    '''Connect to the iRODS server'''
+    if args.user is not None:
+        if args.passwd is None:
+            print("ERROR: --passwd required with --user")
+            sys.exit()
+
+        session = iRODSSession(host=args.host, port=args.port,
+                               user=args.user, password=args.passwd,
+                               zone=args.zone)
+    else:
+        try:
+            session = helpers.make_session()
+        except FileNotFoundError:
+            sys.exit("ERROR: No irods_envirment.json file found. Type 'pyicmd help' for details")
+
+    #Test the connection
+    try:
+        session.server_version
+    except CAT_INVALID_AUTHENTICATION:
+        sys.exit("iRODS server authenication failed.")
+    except CAT_INVALID_USER:
+        sys.exit("Invalid iRODS user.")
+    except CAT_INVALID_CLIENT_USER:
+        sys.exit("Inalid clinet user. (Did you use the right zone?)")
+    except NetworkException as exception:
+        sys.exit(str(exception))
+
+    return session
+
 def main(args):
     ''' Main program function '''
+
     description = '''
     Python port of the irods icommands.
 
@@ -97,6 +136,9 @@ def main(args):
     If user is set via the commandline irods_enviorment.json is ingored
     and given (or default) command line arguments are used to open the session.
     '''
+
+    version = "1.0.2"
+
     help_str = """ The icommand to run:
     rm [file(s)]          Remove the files listed from the irods server
     ls [path]             List the files and folders at the given path
@@ -105,6 +147,7 @@ def main(args):
     test                  Test the connection to the iRODS server.
     To learn more about a function, type pyicmd [cmd] -h
     """
+
     parser = argparse.ArgumentParser(
         description=description,
         add_help=False,
@@ -118,20 +161,14 @@ def main(args):
     parser.add_argument('--user', type=str, help="irods username")
     parser.add_argument('--passwd', type=str, help="irods user password")
     parser.add_argument('--zone', type=str, default='tempZone', help="irods zone")
+    parser.add_argument('--version', action='version', version='pyicmd ' + version)
     args, unknownargs = parser.parse_known_args(args)
 
     if args.cmd == "help":
         parser.print_help()
         sys.exit()
 
-    if args.user is not None:
-        session = iRODSSession(host=args.host, port=args.port, user=args.user,
-                               password=args.passwd, zone=args.zone)
-    else:
-        try:
-            session = helpers.make_session()
-        except FileNotFoundError:
-            sys.exit("ERROR: No irods_envirment.json file found. Type 'pyicmd help' for details")
+    session = connect(args)
 
     if args.cmd == "ls":
         ls(session, unknownargs)
@@ -142,13 +179,17 @@ def main(args):
     elif args.cmd == "get":
         get(session, unknownargs)
     elif args.cmd == "test":
-        print("Connection Sucessful.")
+        test(session)
     else:
         print("ERROR: \"" + args.cmd + "\" is not a vaild command")
         parser.print_help()
         sys.exit()
 
     session.cleanup()
+
+def cli():
+    '''Entry pont used by setup.py'''
+    main(sys.argv[1:])
 
 if __name__ == "__main__":
     main(sys.argv[1:])

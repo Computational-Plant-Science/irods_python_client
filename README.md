@@ -2,9 +2,8 @@
 ---
 ## Install
 ```bash
-pip3 install git+https://github.com/cottersci/irods_python_client.git#egg=pyicmd
+pip3 install --user pyicmd
 ```
-sudo may be required to get pyicmd into the PATH.  
 
 ## Usage
 ```bash

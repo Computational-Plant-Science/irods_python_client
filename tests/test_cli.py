@@ -1,5 +1,6 @@
 from os import path
 import pytest
+import pkg_resources  # part of setuptools
 
 from test_functional import session, IRODS_TEST_DIR
 from pyicmd.pyicmd import main
@@ -11,6 +12,15 @@ def test_help(capfd):
 
     captured = capfd.readouterr()
     assert captured.out.startswith("usage: pytest")
+
+def test_version(capfd):
+    with pytest.raises(SystemExit):
+        args = ['--version']
+        main(args)
+
+    captured = capfd.readouterr()
+    assert captured.out == "pyicmd " + pkg_resources.require("pyicmd")[0].version + "\n"
+
 
 def test_put(tmpdir,session):
     TMP_FILE_NAME = "hello.txt"
@@ -101,13 +111,13 @@ def test_test(capfd):
     args = ["test"]
     main(args)
     captured = capfd.readouterr()
-    assert captured.out == "Connection Sucessful.\n"
+    assert captured.out.startswith("Connection Sucessful.")
 
 def test_test(session,capfd):
     args = ["test"]
     main(args)
     captured = capfd.readouterr()
-    assert captured.out == "Connection Sucessful.\n"
+    assert captured.out.startswith("Connection Sucessful.")
 
 def test_cmdline_irods_env(session,capfd):
     args = ["--host", session.host,
@@ -118,4 +128,4 @@ def test_cmdline_irods_env(session,capfd):
             "test"]
     main(args)
     captured = capfd.readouterr()
-    assert captured.out == "Connection Sucessful.\n"
+    assert captured.out.startswith("Connection Sucessful.")
