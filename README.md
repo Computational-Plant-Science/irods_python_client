@@ -1,18 +1,10 @@
 # Python port of the irods icommands.
-
+---
 ## Install
 ```bash
 pip3 install git+https://github.com/cottersci/irods_python_client.git#egg=pyicmd
 ```
 sudo may be required to get pyicmd into the PATH.  
-
-## Configuration
-pyicmd supports either iinit configuration or command line options. To use an iinit configuration setup on a computer that does not have iinit, copy
-```bash
-~/.irods/irods_environment.json
-~/.irods/.irodsA
-```
-to the ~/.irods on the computer without iinit.
 
 ## Usage
 ```bash
@@ -50,3 +42,22 @@ optional arguments:
 ## Speed Test
 By default, icommands uses multi-threading for uploads greater than ~35MB. pyicmd does not currently support multiple threaded uploads, causing it to be slower for large files.
 ![Speed Test](assets/UploadTimes.png)
+
+# Contributing
+----
+## Testing
+Tests for the functional.py API are written in pytest format and can be run
+with
+
+```bash
+make test
+```
+
+Tests require a valid iRODS server and configured irods_environment.json file created by iinit. [This iRODS docker container](https://github.com/mjstealey/irods-provider-postgres) Was used to run the tests.
+
+## Code Standard
+Code should follow [Python's PEP8 style guide](https://www.python.org/dev/peps/pep-0008/). All contributions should pass standard pylint tests. These can be run using:
+
+```bash
+make lint
+```

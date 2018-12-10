@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name='pyicmd',
-    version='0.3',
+    version='0.4.1',
     description='Python port of the irods icommands',
     url='http://github.com/cottersci/',
     author='Chris Cotter',

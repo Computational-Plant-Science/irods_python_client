@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
 
 from pyicmd import pyicmd
-pyicmd.main()
+import sys
+pyicmd.main(sys.argv[1:])
