@@ -1,11 +1,11 @@
 """
-    Python port of the irods icommands.
+    Python port of the iRODS icommands.
 
     Supports irods_environment.json file created by iinit. File can be at its
     default location ('~/.irods/irods_environment.json') or set via the
     IRODS_ENVIRONMENT_FILE variable.
 
-    If user is set via the commandline irods_enviorment.json is ingored
+    If user is set via the command line irods_environment.json is ignored
     and given (or default) command line arguments are used to open the session.
 """
 import sys
@@ -31,7 +31,7 @@ def ls(session, args):# pylint: disable=invalid-name
     parser = argparse.ArgumentParser(
         prog='pyicmd ls',
         description='List the files and folders at the given path')
-    parser.add_argument('path', type=str, help='Path on irods server to list')
+    parser.add_argument('path', type=str, help='Path on iRODS server to list')
     args = parser.parse_args(args)
 
     try:
@@ -51,7 +51,7 @@ def get(session, args):
                         help='Path or pattern of files to download')
     parser.add_argument('loc', type=str, help='Location to put files')
     parser.add_argument('-R', action='store_true',
-                        help="Put directories and thier contents recursively")
+                        help="Put directories and their contents recursively")
     args = parser.parse_args(args)
 
     for file in args.files:
@@ -69,7 +69,7 @@ def put(session, args):
     parser.add_argument('files', type=str, nargs='+',
                         help='Path or pattern of files to upload')
     parser.add_argument('-R', action='store_true',
-                        help="Put directories and thier contents recursively")
+                        help="Put directories and their contents recursively")
     args = parser.parse_args(args)
 
     for file_path in args.files:
@@ -82,7 +82,7 @@ def rm(session, args):# pylint: disable=invalid-name
     '''Remove a file from the iRODS server'''
     parser = argparse.ArgumentParser(
         prog='pyicmd rm',
-        description='Remove the files listed from the irods server')
+        description='Remove the files listed from the iRODS server')
     parser.add_argument('files', type=str, nargs='+',
                         help='FULL Path or pattern of files to upload')
     args = parser.parse_args(args)
@@ -107,17 +107,17 @@ def connect(args):
         try:
             session = helpers.make_session()
         except FileNotFoundError:
-            sys.exit("ERROR: No irods_envirment.json file found. Type 'pyicmd help' for details")
+            sys.exit("ERROR: No irods_environment.json file found. Type 'pyicmd help' for details")
 
     #Test the connection
     try:
         session.server_version
     except CAT_INVALID_AUTHENTICATION:
-        sys.exit("iRODS server authenication failed.")
+        sys.exit("iRODS server authentication failed.")
     except CAT_INVALID_USER:
         sys.exit("Invalid iRODS user.")
     except CAT_INVALID_CLIENT_USER:
-        sys.exit("Inalid clinet user. (Did you use the right zone?)")
+        sys.exit("Invalid client user. (Did you use the right zone?)")
     except NetworkException as exception:
         sys.exit(str(exception))
 
@@ -127,20 +127,20 @@ def main(args):
     ''' Main program function '''
 
     description = '''
-    Python port of the irods icommands.
+    Python port of the iRODS icommands.
 
     Supports irods_environment.json file created by iinit. File can be at its
     default location ('~/.irods/irods_environment.json') or set via the
     IRODS_ENVIRONMENT_FILE variable.
 
-    If user is set via the commandline irods_enviorment.json is ingored
+    If user is set via the command line irods_environment.json is ignored
     and given (or default) command line arguments are used to open the session.
     '''
 
-    version = "1.0.2"
+    version = "1.0.3"
 
     help_str = """ The icommand to run:
-    rm [file(s)]          Remove the files listed from the irods server
+    rm [file(s)]          Remove the files listed from the iRODS server
     ls [path]             List the files and folders at the given path
     put [loc] [file(s)]   Copy file(s) and folder(s) from the local computer to [loc] on the server
     get [files(s)] [loc]  Copy file(s) and folder(s) from the server to [loc] on the local computer
@@ -156,11 +156,11 @@ def main(args):
                         default='help',
                         type=str,
                         help=help_str)
-    parser.add_argument('--host', type=str, default='localhost', help="Address of irods server")
-    parser.add_argument('--port', type=int, default=1247, help="irods server port")
-    parser.add_argument('--user', type=str, help="irods username")
-    parser.add_argument('--passwd', type=str, help="irods user password")
-    parser.add_argument('--zone', type=str, default='tempZone', help="irods zone")
+    parser.add_argument('--host', type=str, default='localhost', help="Address of iRODS server")
+    parser.add_argument('--port', type=int, default=1247, help="iRODS server port")
+    parser.add_argument('--user', type=str, help="iRODS username")
+    parser.add_argument('--passwd', type=str, help="iRODS user password")
+    parser.add_argument('--zone', type=str, default='tempZone', help="iRODS zone")
     parser.add_argument('--version', action='version', version='pyicmd ' + version)
     args, unknownargs = parser.parse_known_args(args)
 
@@ -181,14 +181,14 @@ def main(args):
     elif args.cmd == "test":
         test(session)
     else:
-        print("ERROR: \"" + args.cmd + "\" is not a vaild command")
+        print("ERROR: \"" + args.cmd + "\" is not a valid command")
         parser.print_help()
         sys.exit()
 
     session.cleanup()
 
 def cli():
-    '''Entry pont used by setup.py'''
+    '''Entry point used by setup.'''
     main(sys.argv[1:])
 
 if __name__ == "__main__":

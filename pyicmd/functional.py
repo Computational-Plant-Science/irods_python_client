@@ -1,5 +1,5 @@
 """
-    Defines a functional API for working with an irods server using file path
+    Defines a functional API for working with an iRODS server using file path
     strings.
 """
 
@@ -7,80 +7,80 @@ import posixpath
 import os
 
 
-def get(session, file_path, dest, recursive=False):
+def get(session, irods_path, local_path, recursive=False):
     """
         Download files from an iRODS server.
 
         Args:
             session (iRODS.session.iRODSSession): iRODS session
-            file_path (String): File or folder path to get
+            irods_path (String): File or folder path to get
                 from the iRODS server. Must be absolute path.
-            dest (String): local folder to place the downloaded files in
-            recursive (boolean): recursively get folders.
+            local_path (String): local folder to place the downloaded files in
+            recursive (Boolean): recursively get folders.
     """
-    if session.data_objects.exists(file_path):
-        to_file_path = os.path.join(dest, os.path.basename(file_path))
-        session.data_objects.get(file_path, file=to_file_path)
-    elif session.collections.exists(file_path):
+    if session.data_objects.exists(irods_path):
+        to_file_path = os.path.join(local_path, os.path.basename(irods_path))
+        session.data_objects.get(irods_path, file=to_file_path)
+    elif session.collections.exists(irods_path):
         if recursive:
-            coll = session.collections.get(file_path)
-            dest = os.path.join(dest, os.path.basename(file_path))
-            os.mkdir(dest)
+            coll = session.collections.get(irods_path)
+            local_path = os.path.join(local_path, os.path.basename(irods_path))
+            os.mkdir(local_path)
 
             for file_object in coll.data_objects:
-                get(session, os.path.join(file_path, file_object.path), dest, True)
+                get(session, os.path.join(irods_path, file_object.path), local_path, True)
             for collection in coll.subcollections:
-                get(session, collection.path, dest, True)
+                get(session, collection.path, local_path, True)
         else:
-            raise FileNotFoundError("Skipping directory " + file_path)
+            raise FileNotFoundError("Skipping directory " + irods_path)
     else:
-        raise FileNotFoundError(file_path + " Does not exist")
+        raise FileNotFoundError(irods_path + " Does not exist")
 
 
-def put(session, file_path, dest, recursive=False):
+def put(session, local_path, irods_path, recursive=False):
     """
         Upload files to an iRODS server.
 
         Args:
             session (iRODS.session.iRODSSession): iRODS session
-            file_path (String): path of file or folder to upload
+            local_path (String): path of file or folder to upload
                 to the iRODS server.
-            dest (String): Path to collection iRODS server to put the files.
+            irods_path (String): Path to collection iRODS server to put the files.
                 Must be an absolute path.
-            recursive (boolean): perform put recursively
+            recursive (Boolean): perform put recursively
     """
 
-    if not session.collections.exists(dest.rstrip('/')):
-        raise FileNotFoundError(dest + " Does not exist")
+    if not session.collections.exists(irods_path.rstrip('/')):
+        raise FileNotFoundError(irods_path + " Does not exist")
 
-    irods_path = posixpath.join(dest, os.path.basename(file_path))
-    if os.path.isfile(file_path):
-        session.data_objects.put(file_path, irods_path)
-    elif os.path.isdir(file_path):
+    irods_path = posixpath.join(irods_path, os.path.basename(local_path))
+    if os.path.isfile(local_path):
+        session.data_objects.put(local_path, irods_path)
+    elif os.path.isdir(local_path):
         if recursive:
             session.collections.create(irods_path)
-            for obj in [os.path.join(file_path, f) for f in os.listdir(file_path)]:
+            for obj in [os.path.join(local_path, f) for f in os.listdir(local_path)]:
                 put(session, obj, irods_path, True)
         else:
-            raise FileNotFoundError("Skipping directory " + file_path)
+            raise FileNotFoundError("Skipping directory " + local_path)
     else:
-        raise FileNotFoundError(file_path + " Does not exist")
+        raise FileNotFoundError(local_path + " Does not exist")
 
-def rm(session, file_path):# pylint: disable=invalid-name
+def rm(session, irods_path):# pylint: disable=invalid-name
     """
         Remove file from an iRODS server
 
         Args:
             session (iRODS.session.iRODSSession): iRODS session
-            file_path: Path of file on the iRODS server to remove
+            irods_path (String): Path of file on the iRODS server to remove
     """
-    if session.data_objects.exists(file_path):
-        obj = session.data_objects.get(file_path)
+    if session.data_objects.exists(irods_path):
+        obj = session.data_objects.get(irods_path)
         obj.unlink(force=True)
-    elif session.collections.exists(file_path):
+    elif session.collections.exists(irods_path):
         raise NotImplementedError("We don't do collections yet")
     else:
-        raise FileNotFoundError(file_path + " Does not exist")
+        raise FileNotFoundError(irods_path + " Does not exist")
 
 
 def ls(session, path):# pylint: disable=invalid-name

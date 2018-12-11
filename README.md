@@ -1,4 +1,4 @@
-# Python port of the irods icommands.
+# Python port of the iRODS icommands.
 ---
 ## Install
 ```bash
@@ -8,34 +8,36 @@ pip3 install --user pyicmd
 ## Usage
 ```bash
 usage: pyicmd [--host HOST] [--port PORT] [--user USER] [--passwd PASSWD]
-              [--zone ZONE]
+              [--zone ZONE] [--version]
               [cmd]
 
-Python port of the irods icommands.
+    Python port of the iRODS icommands.
 
-Supports irods_environment.json file created by iinit. File can be at its
-default location ('~/.irods/irods_environment.json') or set via the
-IRODS_ENVIRONMENT_FILE variable.
+    Supports irods_environment.json file created by iinit. File can be at its
+    default location ('~/.irods/irods_environment.json') or set via the
+    IRODS_ENVIRONMENT_FILE variable.
 
-If user is set via the commandline irods_enviorment.json is ingored
-and given (or default) command line arguments are used to open the session.
+    If user is set via the command line irods_environment.json is ignored
+    and given (or default) command line arguments are used to open the session.
+
 
 positional arguments:
   cmd               The icommand to run:
-                       rm [file(s)]          Remove the files listed from the irods server
+                       rm [file(s)]          Remove the files listed from the iRODS server
                        ls [path]             List the files and folders at the given path
                        put [loc] [file(s)]   Copy file(s) and folder(s) from the local computer to [loc] on the server
                        get [files(s)] [loc]  Copy file(s) and folder(s) from the server to [loc] on the local computer
+                       test                  Test the connection to the iRODS server.
                        To learn more about a function, type pyicmd [cmd] -h
 
 
 optional arguments:
-  --host HOST      Address of irods server
-  --port PORT      irods server port
-  --user USER      irods username
-  --passwd PASSWD  irods user password
-  --zone ZONE      irods zone
-
+  --host HOST      Address of iRODS server
+  --port PORT      iRODS server port
+  --user USER      iRODS username
+  --passwd PASSWD  iRODS user password
+  --zone ZONE      iRODS zone
+  --version        show programs version number and exit
 ```
 
 ## Speed Test
@@ -52,7 +54,7 @@ with
 make test
 ```
 
-Tests require a valid iRODS server and configured irods_environment.json file created by iinit. [This iRODS docker container](https://github.com/mjstealey/irods-provider-postgres) Was used to run the tests.
+Tests require a valid iRODS server and configured irods_environment.json file created by iinit. [This iRODS docker container](https://github.com/mjstealey/irods-provider-postgres) was used to run the tests.
 
 ## Code Standard
 Code should follow [Python's PEP8 style guide](https://www.python.org/dev/peps/pep-0008/). All contributions should pass standard pylint tests. These can be run using:

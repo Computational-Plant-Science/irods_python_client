@@ -1,0 +1,5 @@
+# Allowed words during pylint spell check
+iRODS
+icommands
+iinit
+Args
