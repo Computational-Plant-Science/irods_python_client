@@ -111,13 +111,13 @@ def test_test(capfd):
     args = ["test"]
     main(args)
     captured = capfd.readouterr()
-    assert captured.out.startswith("Connection Sucessful.")
+    assert captured.out.startswith("Connection Successful.")
 
 def test_test(session,capfd):
     args = ["test"]
     main(args)
     captured = capfd.readouterr()
-    assert captured.out.startswith("Connection Sucessful.")
+    assert captured.out.startswith("Connection Successful.")
 
 def test_cmdline_irods_env(session,capfd):
     args = ["--host", session.host,
@@ -128,4 +128,4 @@ def test_cmdline_irods_env(session,capfd):
             "test"]
     main(args)
     captured = capfd.readouterr()
-    assert captured.out.startswith("Connection Sucessful.")
+    assert captured.out.startswith("Connection Successful.")

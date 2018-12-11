@@ -16,7 +16,7 @@ def get(session, file_path, dest, recursive=False):
             file_path (String): File or folder path to get
                 from the iRODS server. Must be absolute path.
             dest (String): local folder to place the downloaded files in
-            recrusive (boolean): recrusively get folders.
+            recursive (boolean): recursively get folders.
     """
     if session.data_objects.exists(file_path):
         to_file_path = os.path.join(dest, os.path.basename(file_path))

@@ -23,7 +23,7 @@ import pyicmd.functional as F
 
 def test(session):
     '''Test the connection to the server'''
-    print("Connection Sucessful. iRODS server version: %s"%
+    print("Connection Successful. iRODS server version: %s"%
           (session.server_version,))
 
 def ls(session, args):# pylint: disable=invalid-name
