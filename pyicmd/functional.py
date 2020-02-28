@@ -66,7 +66,8 @@ def put(session, local_path, irods_path, recursive=False):
     else:
         raise FileNotFoundError(local_path + " Does not exist")
 
-def rm(session, irods_path):# pylint: disable=invalid-name
+
+def rm(session, irods_path):  # pylint: disable=invalid-name
     """
         Remove file from an iRODS server
 
@@ -83,7 +84,7 @@ def rm(session, irods_path):# pylint: disable=invalid-name
         raise FileNotFoundError(irods_path + " Does not exist")
 
 
-def ls(session, path):# pylint: disable=invalid-name
+def ls(session, path):  # pylint: disable=invalid-name
     """
         List files on an iRODS server.
 
@@ -93,5 +94,5 @@ def ls(session, path):# pylint: disable=invalid-name
     """
     coll = session.collections.get(posixpath.join('/', path))
 
-    return([obj.name for obj in coll.data_objects],
-           [obj.name for obj in coll.subcollections])
+    return ([obj.name for obj in coll.data_objects],
+            [obj.name for obj in coll.subcollections])

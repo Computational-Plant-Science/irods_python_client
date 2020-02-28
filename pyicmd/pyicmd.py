@@ -21,13 +21,15 @@ from irods.exception import (CollectionDoesNotExist,
                              NetworkException)
 import pyicmd.functional as F
 
+
 def test(session):
-    '''Test the connection to the server'''
-    print("Connection Successful. iRODS server version: %s"%
+    """Test the connection to the server"""
+    print("Connection Successful. iRODS server version: %s" %
           (session.server_version,))
 
-def ls(session, args):# pylint: disable=invalid-name
-    ''' List Files in collection '''
+
+def ls(session, args):  # pylint: disable=invalid-name
+    """ List Files in collection """
     parser = argparse.ArgumentParser(
         prog='pyicmd ls',
         description='List the files and folders at the given path')
@@ -42,8 +44,9 @@ def ls(session, args):# pylint: disable=invalid-name
     print(files)
     print(collections)
 
+
 def get(session, args):
-    ''' Get file or collection from the iRODS server'''
+    """ Get file or collection from the iRODS server"""
     parser = argparse.ArgumentParser(
         prog='pyicmd get',
         description='Copy file(s) and folder(s) from the server to [loc] on the local computer')
@@ -60,8 +63,9 @@ def get(session, args):
         except FileNotFoundError as exception:
             sys.exit(str(exception))
 
+
 def put(session, args):
-    '''Put a file or folder onto the iRODS server'''
+    """Put a file or folder onto the iRODS server"""
     parser = argparse.ArgumentParser(
         prog='pyicmd put',
         description='Copy file(s) and folder(s) from the local computer to [loc] on the server')
@@ -78,8 +82,9 @@ def put(session, args):
         except FileNotFoundError as exception:
             sys.exit(str(exception))
 
-def rm(session, args):# pylint: disable=invalid-name
-    '''Remove a file from the iRODS server'''
+
+def rm(session, args):  # pylint: disable=invalid-name
+    """Remove a file from the iRODS server"""
     parser = argparse.ArgumentParser(
         prog='pyicmd rm',
         description='Remove the files listed from the iRODS server')
@@ -93,8 +98,9 @@ def rm(session, args):# pylint: disable=invalid-name
         except FileNotFoundError as exception:
             sys.exit(str(exception))
 
+
 def connect(args):
-    '''Connect to the iRODS server'''
+    """Connect to the iRODS server"""
     if args.user is not None:
         if args.passwd is None:
             print("ERROR: --passwd required with --user")
@@ -109,7 +115,7 @@ def connect(args):
         except FileNotFoundError:
             sys.exit("ERROR: No irods_environment.json file found. Type 'pyicmd help' for details")
 
-    #Test the connection
+    # Test the connection
     try:
         session.server_version
     except CAT_INVALID_AUTHENTICATION:
@@ -123,8 +129,9 @@ def connect(args):
 
     return session
 
+
 def main(args):
-    ''' Main program function '''
+    """ Main program function """
 
     description = '''
     Python port of the iRODS icommands.
@@ -187,9 +194,11 @@ def main(args):
 
     session.cleanup()
 
+
 def cli():
-    '''Entry point used by setup.'''
+    """Entry point used by setup."""
     main(sys.argv[1:])
+
 
 if __name__ == "__main__":
     main(sys.argv[1:])
