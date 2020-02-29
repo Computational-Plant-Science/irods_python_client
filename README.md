@@ -1,11 +1,11 @@
-# Python port of the iRODS icommands.
----
-## Install
+# Installation
+
 ```bash
-pip3 install --user pyicmd
+pip install pyicmd
 ```
 
-## Usage
+# Usage
+
 ```bash
 usage: pyicmd [--host HOST] [--port PORT] [--user USER] [--passwd PASSWD]
               [--zone ZONE] [--version]
@@ -40,24 +40,30 @@ optional arguments:
   --version        show programs version number and exit
 ```
 
-## Speed Test
-By default, icommands uses multi-threading for uploads greater than ~35MB. pyicmd does not currently support multiple threaded uploads, causing it to be slower for large files.
+# Speed Test
+
+By default, `icommands` uses multi-threading for uploads greater than ~35MB; `pyicmd` does not currently support multiple threaded uploads, causing it to be slower for large files.
 ![Speed Test](assets/UploadTimes.png)
 
-# Contributing
-----
-## Testing
-Tests for the functional.py API are written in pytest format and can be run
-with
+# Development
 
-```bash
-make test
+To develop `pyicmd`, you will need `pytest`, and `pylint`.
+
+## Tests
+
+Tests can be run with `make test`, or by running `pytest` from the project root.
+
+Note that `test_functional.py` is dependency-free, while `test_cli.py` requires an IRODS server. You can easily start one with [this docker container](https://github.com/mjstealey/irods-provider-postgres):
+
+```
+docker run -d -p 1247:1247 mjstealey/irods-provider-postgres
 ```
 
-Tests require a valid iRODS server and configured irods_environment.json file created by iinit. [This iRODS docker container](https://github.com/mjstealey/irods-provider-postgres) was used to run the tests.
+`test_cli.py` expects the default IRODS username and password (`rods`/`rods`).
 
 ## Code Standard
-Code should follow [Python's PEP8 style guide](https://www.python.org/dev/peps/pep-0008/). All contributions should pass standard pylint tests. These can be run using:
+
+Code should follow [Python's PEP8 style guide](https://www.python.org/dev/peps/pep-0008/). All contributions should pass standard pylint (`pip install pylint`) tests. These can be run using:
 
 ```bash
 make lint
