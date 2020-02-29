@@ -5,17 +5,20 @@ import pkg_resources  # part of setuptools
 from tests.test_functional import session, IRODS_TEST_DIR
 from pyicmd.pyicmd import main
 
+IRODS_USERNAME = "rods"
+IRODS_PASSWORD = "rods"
 
-def test_help(capfd):
+
+def test_help(session, capfd):
     with pytest.raises(SystemExit):
         args = []
         main(args)
 
     captured = capfd.readouterr()
-    assert captured.out.startswith("usage: pytest")
+    assert captured.out.startswith("usage: pyicmd")
 
 
-def test_version(capfd):
+def test_version(session, capfd):
     with pytest.raises(SystemExit):
         args = ['--version']
         main(args)
@@ -29,7 +32,7 @@ def test_put(tmpdir, session):
     file = tmpdir.join(TMP_FILE_NAME)
     file.write("hello")
 
-    args = ["put", IRODS_TEST_DIR, str(file)]
+    args = ["--user", IRODS_USERNAME, "--passwd", IRODS_PASSWORD, "put", IRODS_TEST_DIR, str(file)]
     main(args)
 
     assert session.data_objects.exists(path.join(IRODS_TEST_DIR, TMP_FILE_NAME))
@@ -42,7 +45,7 @@ def test_put_recursive(session, tmpdir):
     file = dir.join(TMP_FILE_NAME)
     file.write("hello")
 
-    args = ["put", "-R", IRODS_TEST_DIR, str(dir)]
+    args = ["--user", IRODS_USERNAME, "--passwd", IRODS_PASSWORD, "put", "-R", IRODS_TEST_DIR, str(dir)]
     main(args)
 
     assert session.collections.exists(path.join(IRODS_TEST_DIR, TMP_DIR_NAME))
@@ -58,7 +61,7 @@ def test_get(session, tmpdir):
                              irods_file_path)
     todir = tmpdir.mkdir("to")
 
-    args = ["get", irods_file_path, str(todir)]
+    args = ["--user", IRODS_USERNAME, "--passwd", IRODS_PASSWORD, "get", irods_file_path, str(todir)]
     main(args)
 
     assert path.isfile(path.join(todir, TMP_FILE_NAME))
@@ -76,7 +79,7 @@ def test_get_recursive(session, tmpdir):
                              irods_file_path)
     todir = tmpdir.mkdir("to")
 
-    args = ["get", "-R", irods_dir_path, str(todir)]
+    args = ["--user", IRODS_USERNAME, "--passwd", IRODS_PASSWORD, "get", "-R", irods_dir_path, str(todir)]
     main(args)
 
     assert path.isdir(path.join(todir, TMP_DIR_NAME))
@@ -92,7 +95,7 @@ def test_ls(session, tmpdir, capfd):
     session.data_objects.put(str(file),
                              path.join(IRODS_TEST_DIR, TMP_FILE_NAME))
 
-    args = ["ls", IRODS_TEST_DIR]
+    args = ["--user", IRODS_USERNAME, "--passwd", IRODS_PASSWORD, "ls", IRODS_TEST_DIR]
     main(args)
     captured = capfd.readouterr()
 
@@ -109,21 +112,21 @@ def test_rm(session, tmpdir):
                              irods_file_path)
     assert session.data_objects.exists(irods_file_path)
 
-    args = ["rm", irods_file_path]
+    args = ["--user", IRODS_USERNAME, "--passwd", IRODS_PASSWORD, "rm", irods_file_path]
     main(args)
 
     assert not session.data_objects.exists(irods_file_path)
 
 
-def test_test(capfd):
-    args = ["test"]
+def test_test(session, capfd):
+    args = ["--user", IRODS_USERNAME, "--passwd", IRODS_PASSWORD, "test"]
     main(args)
     captured = capfd.readouterr()
     assert captured.out.startswith("Connection Successful.")
 
 
 def test_test(session, capfd):
-    args = ["test"]
+    args = ["--user", IRODS_USERNAME, "--passwd", IRODS_PASSWORD, "test"]
     main(args)
     captured = capfd.readouterr()
     assert captured.out.startswith("Connection Successful.")

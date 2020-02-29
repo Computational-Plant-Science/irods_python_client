@@ -156,6 +156,7 @@ def main(args):
     """
 
     parser = argparse.ArgumentParser(
+        prog="pyicmd",
         description=description,
         add_help=False,
         formatter_class=RawTextHelpFormatter)

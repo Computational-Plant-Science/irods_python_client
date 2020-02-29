@@ -18,7 +18,7 @@ def session():
                                password="rods",
                                zone="tempZone")
 
-    if (session.collections.exists(IRODS_TEST_DIR)):
+    if session.collections.exists(IRODS_TEST_DIR):
         coll = session.collections.get(IRODS_TEST_DIR)
         coll.remove(recursive=True, force=True)
 
