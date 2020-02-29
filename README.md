@@ -47,7 +47,7 @@ By default, `icommands` uses multi-threading for uploads greater than ~35MB; `py
 
 # Development
 
-To develop `pyicmd`, you will need `pytest`, and `pylint`.
+To develop `pyicmd`, you will need `pytest` and `pylint`.
 
 ## Tests
 
