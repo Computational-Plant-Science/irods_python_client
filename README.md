@@ -6,7 +6,7 @@ pip install pyicmd
 
 # Usage
 
-```bash
+```
 usage: pyicmd [--host HOST] [--port PORT] [--user USER] [--passwd PASSWD]
               [--zone ZONE] [--version]
               [cmd]
