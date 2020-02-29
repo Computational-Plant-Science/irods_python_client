@@ -53,8 +53,11 @@ To develop `pyicmd`, you will need:
 - Python 3
 - `pytest`
 - `pylint`
-- `wheel`
-- `twine`
+
+To publish the package, you'll also need:
+
+- `wheel` (to publish)
+- `twine` (to publish)
 
 ## Tests
 
